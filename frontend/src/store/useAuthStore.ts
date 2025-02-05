@@ -17,12 +17,20 @@ interface AuthStore {
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
+  onlineUsers: OnlineUser[];
 
   checkAuth: () => Promise<void>; 
   signup: (data: SignupData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: ProfileData) => Promise<void>;
+}
+
+interface OnlineUser {
+  _id: string;
+  fullName: string;
+  name: string;
+  profilePic?: string;
 }
 
 interface SignupData {
@@ -43,8 +51,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-
   isCheckingAuth: true,
+  onlineUsers: [],
 
   checkAuth: async () => {
     try {
