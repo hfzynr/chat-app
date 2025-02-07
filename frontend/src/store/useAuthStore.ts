@@ -3,7 +3,7 @@ import {axiosInstance} from '../lib/axios';
 import toast from 'react-hot-toast';
 
 interface AuthUser {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   fullName: string;

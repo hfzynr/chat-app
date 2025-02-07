@@ -12,7 +12,8 @@ interface ChatStore {
 
   getUsers: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
-  setSelectedUser: (selectedUser: User) => void;
+  setSelectedUser: (selectedUser: User | null) => void;
+  sendMessage: (messageData: MessageData) => Promise<void>;
 }
 
 interface User {
@@ -21,8 +22,12 @@ interface User {
   profilePic?: string; 
 }
 
+interface MessageData {
+  
+}
 
-export const useChatStore = create<ChatStore>((set) => ({
+
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -54,5 +59,15 @@ export const useChatStore = create<ChatStore>((set) => ({
     }
   },
 
-  setSelectedUser: (selectedUser: User) => set({ selectedUser }),
+  sendMessage: async (messageData: MessageData) => {
+    const { selectedUser, messages } = get()
+    try {
+      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      set({ messages: [...messages, res.data] })
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  },
+
+  setSelectedUser: (selectedUser: User | null) => set({ selectedUser }),
 }))
